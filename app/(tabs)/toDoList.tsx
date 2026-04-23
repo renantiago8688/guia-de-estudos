@@ -51,7 +51,7 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 30, backgroundColor: '#000' },
+    container: { flex: 1, padding: 30, backgroundColor: '#25292e' },
     titulo: { fontSize: 26, fontWeight: 'bold', color:'#fff', marginBottom: 20, marginTop: 20 },
     inputContainer: { flexDirection: 'row', marginBottom: 25 },
     input: { flex: 1, height: 55, backgroundColor: '#1A1A1A', borderRadius: 12, paddingHorizontal: 15, color: '#fff', fontSize: 16 },

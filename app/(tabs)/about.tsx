@@ -25,7 +25,7 @@ export default function About() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000', // Fundo preto total
+    backgroundColor: '#25292e', // Fundo preto total
     alignItems: 'center',
     justifyContent: 'center',
     padding: 30, // Espaçamento nas laterais

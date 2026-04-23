@@ -62,7 +62,7 @@ export default function Planejamento() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#000', padding: 25 },
+    container: { flex: 1, backgroundColor: '#25292e', padding: 25 },
     titulo: { color: '#fff', fontSize: 28, fontWeight: 'bold', marginBottom: 25, marginTop: 40 },
     card: { backgroundColor: '#1A1A1A', padding: 20, borderRadius: 15, marginBottom: 15, borderWidth: 1, borderColor: '#333' },
     cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
