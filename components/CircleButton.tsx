@@ -1,4 +1,4 @@
-import { View, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet } from 'react-native'; // O import já estava certo!
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React from 'react';
 
@@ -8,16 +8,15 @@ type Props = {
 
 export default function CircleButton({ onPress }: Props) {
     return (
-        <view style = {styles.CircleButtonContainer}>
+        <View style={styles.CircleButtonContainer}>
             <Pressable style={styles.circleButton} onPress={onPress}>
                 <MaterialIcons name="add" size={38} color="#25292e" />
             </Pressable>
-        </view>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-
     CircleButtonContainer: {
         width: 84,
         height: 84,
