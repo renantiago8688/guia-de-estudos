@@ -1,5 +1,15 @@
-import React from 'react';
-import { useState, FormEvent } from 'react';
+import React, { useState } from 'react';
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  Image, 
+  ScrollView, 
+  StyleSheet, 
+  Linking,
+  ActivityIndicator
+} from 'react-native';
 
 interface WikiThumbnail {
   source: string;
@@ -26,8 +36,7 @@ export default function PesquisaWikipedia() {
   const [erro, setErro] = useState<string>('');
   const [carregando, setCarregando] = useState<boolean>(false);
 
-  const buscarNaWikipedia = async (e: FormEvent) => {
-    e.preventDefault();
+  const buscarNaWikipedia = async () => {
     if (!termo.trim()) return;
 
     setCarregando(true);
@@ -58,49 +67,147 @@ export default function PesquisaWikipedia() {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-      <h2>🔍 Aba de Pesquisa Rápida (TSX)</h2>
-      <p>Digite um tema para ver o resumo dos seus estudos.</p>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.wrapper}>
+        <Text style={styles.titulo}>🔍 Aba de Pesquisa Rápida</Text>
+        <Text style={styles.subtitulo}>Digite um tema para ver o resumo dos seus estudos.</Text>
 
-      <form onSubmit={buscarNaWikipedia} style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-        <input
-          type="text"
-          value={termo}
-          onChange={(e) => setTermo(e.target.value)}
-          placeholder="Ex: Sistema Solar, Segunda Guerra..."
-          style={{ flex: 1, padding: '10px', borderRadius: '4px', border: '1px solid #ccc' }}
-        />
-        <button type="submit" style={{ padding: '10px 20px', cursor: 'pointer' }} disabled={carregando}>
-          {carregando ? 'Buscando...' : 'Pesquisar'}
-        </button>
-      </form>
-
-      {erro && <p style={{ color: 'red' }}>{erro}</p>}
-
-      {resultado && (
-        <div style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
-          <h3>{resultado.title}</h3>
-          
-          {resultado.thumbnail && (
-            <img 
-              src={resultado.thumbnail.source} 
-              alt={resultado.title} 
-              style={{ maxWidth: '100%', maxHeight: '200px', borderRadius: '4px', margin: '10px 0' }}
-            />
-          )}
-          
-          <p style={{ lineHeight: '1.6', textAlign: 'justify' }}>{resultado.extract}</p>
-          
-          <a 
-            href={resultado.content_urls.desktop.page} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            style={{ color: '#0066cc', textDecoration: 'underline', display: 'block', marginTop: '10px' }}
+        <View style={styles.form}>
+          <TextInput
+            value={termo}
+            onChangeText={setTermo} 
+            placeholder="Ex: Sistema Solar, Segunda Guerra..."
+            placeholderTextColor="#888"
+            style={styles.input}
+            onSubmitEditing={buscarNaWikipedia} 
+          />
+          <TouchableOpacity 
+            style={styles.botao} 
+            onPress={buscarNaWikipedia} 
+            disabled={carregando}
           >
-            Ler artigo completo na Wikipedia →
-          </a>
-        </div>
-      )}
-    </div>
+            {carregando ? (
+              <ActivityIndicator color="#fff" size="small" />
+            ) : (
+              <Text style={styles.txtBotao}>Pesquisar</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+
+        {erro ? <Text style={styles.erro}>{erro}</Text> : null}
+
+        {resultado && (
+          <View style={styles.card}>
+            <Text style={styles.cardTitulo}>{resultado.title}</Text>
+            
+            {resultado.thumbnail && (
+              <Image 
+                source={{ uri: resultado.thumbnail.source }} 
+                style={styles.imagem}
+              />
+            )}
+            
+            <Text style={styles.cardTexto}>{resultado.extract}</Text>
+            
+    
+            <TouchableOpacity onPress={() => Linking.openURL(resultado.content_urls.desktop.page)}>
+              <Text style={styles.link}>Ler artigo completo na Wikipedia →</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 40,
+    backgroundColor: '#25292e',
+  },
+  wrapper: {
+    padding: 20,
+    maxWidth: 600,
+    width: '100%',
+    alignSelf: 'center', 
+  },
+  titulo: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#fff', 
+  },
+  subtitulo: {
+    fontSize: 14,
+    color: '#aaa',
+    marginBottom: 20,
+  },
+  form: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 20,
+  },
+  input: {
+    flex: 1,
+    backgroundColor: '#fff',
+    padding: 12,
+    borderRadius: 6,
+    color: '#000',
+    fontSize: 16,
+  },
+  botao: {
+    backgroundColor: '#3d81ff',
+    paddingHorizontal: 20,
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  txtBotao: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  erro: {
+    color: '#ff4d4d',
+    marginBottom: 15,
+    fontWeight: '600',
+  },
+  card: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 8,
+    marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+
+  },
+  cardTitulo: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#25292e',
+  },
+  imagem: {
+    width: '100%',
+    height: 200,
+    borderRadius: 6,
+    marginVertical: 12,
+    resizeMode: 'cover',
+  },
+  cardTexto: {
+    fontSize: 16,
+    lineHeight: 24,
+    textAlign: 'justify',
+    color: '#333',
+  },
+  link: {
+    color: '#3d81ff',
+    textDecorationLine: 'underline',
+    marginTop: 15,
+    fontWeight: '600',
+    fontSize: 15,
+  },
+});
