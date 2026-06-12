@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState, FormEvent } from 'react';
 
-// 1. Definindo as Interfaces para os dados da Wikipedia
 interface WikiThumbnail {
   source: string;
   width: number;
@@ -17,7 +16,7 @@ interface WikiUrls {
 interface WikiSummaryResponse {
   title: string;
   extract: string;
-  thumbnail?: WikiThumbnail; // Opcional, nem todo artigo tem foto
+  thumbnail?: WikiThumbnail; 
   content_urls: WikiUrls;
 }
 
@@ -27,7 +26,6 @@ export default function PesquisaWikipedia() {
   const [erro, setErro] = useState<string>('');
   const [carregando, setCarregando] = useState<boolean>(false);
 
-  // 2. Tipando o evento do formulário como FormEvent
   const buscarNaWikipedia = async (e: FormEvent) => {
     e.preventDefault();
     if (!termo.trim()) return;
@@ -46,7 +44,6 @@ export default function PesquisaWikipedia() {
         throw new Error('Artigo não encontrado. Tente digitar de outra forma.');
       }
 
-      // 3. Indicando ao fetch o tipo esperado do JSON
       const data: WikiSummaryResponse = await response.json();
       setResultado(data);
     } catch (err) {
