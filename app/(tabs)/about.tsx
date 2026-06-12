@@ -5,16 +5,13 @@ import { StyleSheet, Text, View } from "react-native";
 export default function About() {
   return (
     <View style={styles.container}>
-      {/* Título Principal */}
       <Text style={styles.text}>Guia de Estudos</Text>
       
-      {/* Texto de Resumo do Tema */}
       <Text style={styles.description}>
         Este aplicativo foi desenvolvido para ajudar você a organizar suas matérias, 
         definir prioridades e gerenciar seu tempo de estudo de forma eficiente.
       </Text>
 
-      {/* Botão para Voltar */}
       <Link href="/" style={styles.button}>
         ← Voltar para a Página Inicial.
       </Link>
@@ -25,10 +22,10 @@ export default function About() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#25292e', // Fundo preto total
+    backgroundColor: '#25292e', 
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 30, // Espaçamento nas laterais
+    padding: 30, 
   },
   text: {
     color: '#fff',
@@ -39,8 +36,8 @@ const styles = StyleSheet.create({
   description: {
     color: '#ccc', 
     fontSize: 18,
-    textAlign: 'center', // Centraliza o texto do resumo
-    lineHeight: 26, // Dá um espaço entre as linhas para facilitar a leitura
+    textAlign: 'center', 
+    lineHeight: 26, 
     marginBottom: 40,
   },
   button: {

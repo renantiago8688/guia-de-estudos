@@ -1,19 +1,17 @@
 import { useLocalSearchParams } from 'expo-router';
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TextInput, StyleSheet } from 'react-native';
-import { useTarefas } from '@/hooks/useTarefas'; // Importante!
+import { useTarefas } from '@/hooks/useTarefas'; 
 
 export default function Planejamento() {
   const { novaMateria } = useLocalSearchParams();
-  const { tarefas } = useTarefas(); // Puxa a lista oficial
+  const { tarefas } = useTarefas();
   
-  // Estado para os horários (indexado pelo texto da matéria para facilitar)
   const [horarios, setHorarios] = useState<{ [key: string]: string }>({});
   
-  // Lista local apenas das matérias que o usuário ESCOLHEU planejar
   const [selecionadas, setSelecionadas] = useState<string[]>([]);
 
-  // Quando o usuário clica em uma matéria na ToDoList
+  
   useEffect(() => {
     if (novaMateria && typeof novaMateria === 'string') {
       if (!selecionadas.includes(novaMateria)) {
@@ -33,7 +31,7 @@ export default function Planejamento() {
       <Text style={styles.titulo}>Cronograma</Text>
       
       <FlatList
-        data={listaParaExibir} // Usa a lista filtrada em tempo real
+        data={listaParaExibir} 
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.card}>
