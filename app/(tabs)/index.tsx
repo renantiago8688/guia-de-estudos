@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import * as MediaLibrary from 'expo-media-library';
-import { ImageSourcePropType, StyleSheet, View } from "react-native"; // Removido Text que não estava em uso
+import { ImageSourcePropType, StyleSheet, View } from "react-native"; 
 import { captureRef } from 'react-native-view-shot';
 import Button from '@/components/Button';
 import ImageViewer from '@/components/ImageViewer';
