@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
-  Image, 
-  ScrollView, 
-  StyleSheet, 
-  Linking,
-  ActivityIndicator
+import {
+    ActivityIndicator,
+    Linking,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from 'react-native';
+// 1. IMPORTANTE: Importando a imagem otimizada do Expo
+import { Image } from 'expo-image';
 
 interface WikiThumbnail {
   source: string;
@@ -43,11 +44,22 @@ export default function PesquisaWikipedia() {
     setErro('');
     setResultado(null);
 
-    const termoFormatado = encodeURIComponent(termo.trim());
+    let termoLimpo = termo.trim();
+    termoLimpo = termoLimpo.charAt(0).toUpperCase() + termoLimpo.slice(1);
+    termoLimpo = termoLimpo.replace(/\s+/g, '_');
+
+    const termoFormatado = encodeURIComponent(termoLimpo);
     const url = `https://pt.wikipedia.org/api/rest_v1/page/summary/${termoFormatado}`;
 
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'User-Agent': 'GuiaDeEstudosApp/1.0 (suporte@estudos.com)'
+        }
+      });
       
       if (!response.ok) {
         throw new Error('Artigo não encontrado. Tente digitar de outra forma.');
@@ -57,7 +69,7 @@ export default function PesquisaWikipedia() {
       setResultado(data);
     } catch (err) {
       if (err instanceof Error) {
-        setErro(err.message);
+        setErro(err.message === 'Failed to fetch' ? 'Erro de conexão. Verifique sua internet.' : err.message);
       } else {
         setErro('Ocorreu um erro inesperado.');
       }
@@ -79,11 +91,13 @@ export default function PesquisaWikipedia() {
             placeholder="Ex: Sistema Solar, Segunda Guerra..."
             placeholderTextColor="#888"
             style={styles.input}
-            onSubmitEditing={buscarNaWikipedia} 
+            returnKeyType="search" 
+            onSubmitEditing={() => buscarNaWikipedia()} 
+            blurOnSubmit={true} 
           />
           <TouchableOpacity 
             style={styles.botao} 
-            onPress={buscarNaWikipedia} 
+            onPress={() => buscarNaWikipedia()} 
             disabled={carregando}
           >
             {carregando ? (
@@ -100,16 +114,22 @@ export default function PesquisaWikipedia() {
           <View style={styles.card}>
             <Text style={styles.cardTitulo}>{resultado.title}</Text>
             
-            {resultado.thumbnail && (
+            {/* O componente expo-image gerencia os headers de segurança automaticamente no mobile */}
+            {resultado.thumbnail && resultado.thumbnail.source ? (
               <Image 
-                source={{ uri: resultado.thumbnail.source }} 
+                source={{ 
+                  uri: resultado.thumbnail.source.startsWith('//') 
+                    ? `https:${resultado.thumbnail.source}` 
+                    : resultado.thumbnail.source 
+                }} 
                 style={styles.imagem}
+                contentFit="cover" // Equivalente ao resizeMode='cover'
+                transition={200} // Efeito suave de fade ao carregar
               />
-            )}
+            ) : null}
             
             <Text style={styles.cardTexto}>{resultado.extract}</Text>
             
-    
             <TouchableOpacity onPress={() => Linking.openURL(resultado.content_urls.desktop.page)}>
               <Text style={styles.link}>Ler artigo completo na Wikipedia →</Text>
             </TouchableOpacity>
@@ -182,7 +202,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-
   },
   cardTitulo: {
     fontSize: 20,
@@ -192,10 +211,9 @@ const styles = StyleSheet.create({
   },
   imagem: {
     width: '100%',
-    height: 200,
+    height: 200, // Altura fixa necessária no mobile
     borderRadius: 6,
     marginVertical: 12,
-    resizeMode: 'cover',
   },
   cardTexto: {
     fontSize: 16,
